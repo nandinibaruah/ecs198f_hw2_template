@@ -3,13 +3,18 @@
 # Homework 2
 # Dockerfile with 3 Tasks
 
-# Set Debian bookworm operating system as the base image
+# Set Debian bookworm as the base image
 FROM debian:bookworm
 
-# Install Miniconda using the latest installer
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /tmp/miniconda.sh \
-    && bash /tmp/miniconda.sh -b -p /opt/conda \
-    && rm /tmp/miniconda.sh
+# Install the required dependencies
+RUN apt-get update && apt-get install -y wget git && rm -rf /var/lib/apt/lists/*
 
-# Clones the python-helloworld repo into the root directory
+# Download and install Miniconda with the latest installer
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O /miniconda.sh && \
+    bash /miniconda.sh -b -p /opt/miniconda && rm /miniconda.sh
+
+# Set path for conda
+ENV PATH="/opt/miniconda/bin:$PATH"
+
+# Clone the python-helloworld repository
 RUN git clone https://github.com/dbarnett/python-helloworld /python-helloworld
